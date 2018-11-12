@@ -178,13 +178,28 @@ namespace Minecraft_Modding_Tool
 
         public void GenerateStairsModelJSON(string itemName, string modid)
         {
+            string name = itemName.Replace("_stairs", "");
             string[] stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
             {
                 stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
-                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", itemName);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", name + "_stairs");
             }
             File.WriteAllLines(outputPath + @"\models\block\" + itemName + @".json", stairsModelTemplate);
+            stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs Inner.json");
+            for (int i = 0; i < stairsModelTemplate.Length; i++)
+            {
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", name + "_inner_stairs");
+            }
+            File.WriteAllLines(outputPath + @"\models\block\" + name + "_inner_stairs" + @".json", stairsModelTemplate);
+            stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs Outer.json");
+            for (int i = 0; i < stairsModelTemplate.Length; i++)
+            {
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", name + "_outer_stairs");
+            }
+            File.WriteAllLines(outputPath + @"\models\block\" + name + "_outer_stairs" + @".json", stairsModelTemplate);
         }
 
         public void GenerateStairsItemJSON(string itemName, string modid)

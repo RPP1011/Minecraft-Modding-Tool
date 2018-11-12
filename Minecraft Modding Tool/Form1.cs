@@ -27,6 +27,7 @@ namespace Minecraft_Modding_Tool
             comboBox1.Items.Add(new NameValue("Block", "Block"));
             comboBox1.Items.Add(new NameValue("Item", "Item"));
             comboBox1.Items.Add(new NameValue("Slab", "Slab"));
+            comboBox1.Items.Add(new NameValue("Stairs", "Stairs"));
             comboBox1.Select(0, 0);
         }
 
@@ -124,7 +125,7 @@ namespace Minecraft_Modding_Tool
 
         private void GenerateJSON(object sender, EventArgs e)
         {
-            if (items.Count == 0 || outputPath == string.Empty)
+            if (items.Count == 0 || outputPath == string.Empty || outputPath == null)
             {
                 return;
             }
@@ -153,6 +154,12 @@ namespace Minecraft_Modding_Tool
             if (type == "Item")
             {
             }
+            else if(type == "Stairs")
+            {
+                GenerateStairsModelJSON(name, modid);
+                GenerateStairsItemJSON(name, modid);
+                GenerateStairsBlockStateJSON(name, modid);
+            }
             else if (type == "Block")
             {
                 GenerateBlockModelJSON(name, modid);
@@ -167,6 +174,42 @@ namespace Minecraft_Modding_Tool
             }
 
             UpdateLang(displayName, name, type);
+        }
+
+        public void GenerateStairsModelJSON(string itemName, string modid)
+        {
+            string[] stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs.json");
+            for (int i = 0; i < stairsModelTemplate.Length; i++)
+            {
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", itemName);
+            }
+            File.WriteAllLines(outputPath + @"\models\block\" + itemName + @".json", stairsModelTemplate);
+        }
+
+        public void GenerateStairsItemJSON(string itemName, string modid)
+        {
+            string[] stairsModelTemplate = File.ReadAllLines(templatePath + "MI Stairs.json");
+            for (int i = 0; i < stairsModelTemplate.Length; i++)
+            {
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", itemName);
+            }
+            File.WriteAllLines(outputPath + @"\models\item\" + itemName + @".json", stairsModelTemplate);
+        }
+
+        public void GenerateStairsBlockStateJSON(string itemName, string modid)
+        {     
+            string name = itemName.Replace("_stairs", "");
+            string[] stairsModelTemplate = File.ReadAllLines(templatePath + "BS Stairs.json");
+            for (int i = 0; i < stairsModelTemplate.Length; i++)
+            {
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAMEreg", name + "_stairs");
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAMEout", name + "_outer_stairs");
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAMEin", name + "_inner_stairs");
+            }
+            File.WriteAllLines(outputPath + @"\blockstates\" + name + "_stairs" + @".json", stairsModelTemplate);
         }
 
         public void GenerateBlockModelJSON(string itemName, string modid)
@@ -271,6 +314,11 @@ namespace Minecraft_Modding_Tool
 
                         break;
 
+                    case "Stairs":
+                        file.WriteLine(String.Format("tile.{0}.name={1}", name, origName));
+
+                        break;
+
                     case "Block":
                         file.WriteLine(String.Format("tile.{0}.name={1}", name, origName));
 
@@ -290,6 +338,11 @@ namespace Minecraft_Modding_Tool
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             textBox4.Text = textBox2.Text;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "half=bottom,variant=default": { "model": "MODID:bottom_NAME" },
+        "half=top,variant=default": { "model": "MODID:upper_NAME" }
+    }
+}

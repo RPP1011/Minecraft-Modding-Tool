@@ -17,110 +17,107 @@ namespace Minecraft_Modding_Tool
         public string templatePath;
         public string modid;
 
-        private List<string> items = new List<string>();
+        public BindingList<Item> items;
+
+        private Item currentlySelectedItem;
+        private bool swapping = false;
 
         public Form1()
         {
             InitializeComponent();
+
+            items = new BindingList<Item>();
+            items.AllowNew = true;
+            items.AllowRemove = true;
+            items.RaiseListChangedEvents = true;
+            items.AllowEdit = false;
+
+            itemListBox.DataSource = items;
+            itemListBox.DisplayMember = "NotarizedName";
             templatePath = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + @"\Templates\";
-            listBox1.DataSource = items;
-            comboBox1.Items.Add(new NameValue("Block", "Block"));
-            comboBox1.Items.Add(new NameValue("Item", "Item"));
-            comboBox1.Items.Add(new NameValue("Slab", "Slab"));
-            comboBox1.Items.Add(new NameValue("Stairs", "Stairs"));
-            comboBox1.Select(0, 0);
-        }
 
-        public class NameValue
-        {
-            private string dataName;
-            private string dataValue;
-
-            public NameValue(string dataName, string dataValue)
-            {
-                DataName = dataName;
-                DataValue = dataValue;
-            }
-
-            public string DataName
-            {
-                get
-                {
-                    return dataName;
-                }
-                set
-                {
-                    dataName = value;
-                }
-            }
-
-            public string DataValue
-            {
-                get
-                {
-                    return dataValue;
-                }
-                set
-                {
-                    dataValue = value;
-                }
-            }
-
-            public override string ToString()
-            {
-                return dataName;
-            }
+            InitializeFields(null);
         }
 
         private void ChooseOutput(object sender, EventArgs e)
         {
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            if (outputPathPicker.ShowDialog() == DialogResult.OK)
             {
-                outputPath = folderBrowserDialog1.SelectedPath;
-                textBox1.Text = outputPath;
-                string package = new DirectoryInfo(outputPath).Name;
-                textBox3.Text = package;
-                modid = package;
+                outputPathText.Text = outputPath = outputPathPicker.SelectedPath;
+                modidText.Text = modid = new DirectoryInfo(outputPath).Name;
             }
+        }
+
+        private void InitializeFields(Item item)
+        {
+            swapping = true;
+            if (item == null)
+            {
+                itemNameText.Enabled = false;
+                displayNameText.Enabled = false;
+
+                textureFileChooseButton.Enabled = false;
+
+                blockCheckBox.Enabled = false;
+                chestCheckBox.Enabled = false;
+                stairsCheckBox.Enabled = false;
+                fenceCheckBox.Enabled = false;
+                itemCheckBox.Enabled = false;
+                wallCheckBox.Enabled = false;
+                slabCheckBox.Enabled = false;
+
+                blockCheckBox.CheckState = CheckState.Unchecked;
+                stairsCheckBox.CheckState = CheckState.Unchecked;
+                slabCheckBox.CheckState = CheckState.Unchecked;
+                wallCheckBox.CheckState = CheckState.Unchecked;
+                fenceCheckBox.CheckState = CheckState.Unchecked;
+                itemCheckBox.CheckState = CheckState.Unchecked;
+                chestCheckBox.CheckState = CheckState.Unchecked;
+                swapping = false;
+                return;
+            }
+            itemNameText.Enabled = true;
+            displayNameText.Enabled = true;
+            textureFileChooseButton.Enabled = true;
+
+            blockCheckBox.Enabled = true;
+            chestCheckBox.Enabled = true;
+            stairsCheckBox.Enabled = true;
+            fenceCheckBox.Enabled = true;
+            itemCheckBox.Enabled = true;
+            wallCheckBox.Enabled = true;
+            slabCheckBox.Enabled = true;
+
+            itemNameText.Text = item.itemName;
+            displayNameText.Text = item.displayName;
+            realNameText.Text = item.NotarizedName;
+
+            textureFileText.Text = item.textureFile;
+
+            blockCheckBox.CheckState = item.tags["Block"].exists ? CheckState.Checked : CheckState.Unchecked;
+            stairsCheckBox.CheckState = item.tags["Stairs"].exists ? CheckState.Checked : CheckState.Unchecked;
+            slabCheckBox.CheckState = item.tags["Slab"].exists ? CheckState.Checked : CheckState.Unchecked;
+            wallCheckBox.CheckState = item.tags["Wall"].exists ? CheckState.Checked : CheckState.Unchecked;
+            fenceCheckBox.CheckState = item.tags["Fence"].exists ? CheckState.Checked : CheckState.Unchecked;
+            itemCheckBox.CheckState = item.tags["Item"].exists ? CheckState.Checked : CheckState.Unchecked;
+            chestCheckBox.CheckState = item.tags["Chest"].exists ? CheckState.Checked : CheckState.Unchecked;
+            swapping = false;
         }
 
         private void AddElement(object sender, EventArgs e)
         {
-            if (textBox2.Text == string.Empty || textBox2.Text == "Name" || comboBox1.SelectedItem == null)
-            {
-                return;
-            }
-
-            if (textBox2.Text.Any(char.IsDigit))
-            {
-                Prompt.ShowDialog("Numbers aren't allowed in item names", "Invalid Name");
-                return;
-            }
-
-            items.Add(textBox2.Text + "(" + ((NameValue)comboBox1.SelectedItem).DataValue + ")" + textBox4.Text);
-            listBox1.DataSource = null;
-            listBox1.DataSource = items;
-            textBox2.Text = "Name";
-            textBox4.Text = "Display Name";
-
-            button4.Enabled = true;
+            items.Add(new Item());
+            itemListBox.SetSelected(items.Count - 1, true);
         }
 
         private void RemoveElement(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex < 0)
+            if (itemListBox.SelectedIndex < 0)
             {
                 return;
             }
 
-            items.RemoveAt(listBox1.SelectedIndex);
-            if (items.Count == 0)
-            {
-                button4.Enabled = false;
-            }
-
-            listBox1.DataSource = null;
-            listBox1.DataSource = items;
+            items.RemoveAt(itemListBox.SelectedIndex);
         }
 
         private void GenerateJSON(object sender, EventArgs e)
@@ -129,32 +126,22 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            progressBar1.Value = 0;
 
             for (int i = 0; i < items.Count; i++)
             {
-                string[] parts = items[i].Split('(', ')');
-                string displayName = parts[2];
-                string type = parts[1];
-                string name = parts[0].Replace(' ', '_').ToLower();
-
-                GenerateItem(displayName, type, name);
-
-                progressBar1.Value = (int)(i / (float)items.Count) * 100;
+                GenerateItem(items[i]);
             }
             Prompt.ShowDialog("Generation Complete", "Update");
-            progressBar1.Value = 0;
             items.Clear();
-            listBox1.DataSource = null;
-            listBox1.DataSource = items;
         }
 
-        private void GenerateItem(string displayName, string type, string name)
+        private void GenerateItem(Item item)
         {
+            UpdateLang(item);
             if (type == "Item")
             {
             }
-            else if(type == "Stairs")
+            else if (type == "Stairs")
             {
                 GenerateStairsModelJSON(name, modid);
                 GenerateStairsItemJSON(name, modid);
@@ -175,6 +162,8 @@ namespace Minecraft_Modding_Tool
 
             UpdateLang(displayName, name, type);
         }
+
+        #region JSON File Gen
 
         public void GenerateStairsModelJSON(string itemName, string modid)
         {
@@ -214,7 +203,7 @@ namespace Minecraft_Modding_Tool
         }
 
         public void GenerateStairsBlockStateJSON(string itemName, string modid)
-        {     
+        {
             string name = itemName.Replace("_stairs", "");
             string[] stairsModelTemplate = File.ReadAllLines(templatePath + "BS Stairs.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
@@ -317,47 +306,195 @@ namespace Minecraft_Modding_Tool
             File.WriteAllLines(outputPath + @"\blockstates\double_" + itemName + @".json", doubleSlabTemplate);
         }
 
-        private void UpdateLang(string origName, string name, string type)
+        #endregion JSON File Gen
+
+        private void UpdateLang(Item item)
         {
             using (StreamWriter file = File.AppendText(outputPath + @"\lang\en_US.lang"))
             {
                 file.WriteLine("");
-                switch (type)
+                bool trigged = false;
+                foreach (KeyValuePair<string, Item.ItemVariant> tag in item.tags)
                 {
-                    case "Slab":
-                        file.WriteLine(String.Format("tile.{0}.name={1}", name, origName));
-
-                        break;
-
-                    case "Stairs":
-                        file.WriteLine(String.Format("tile.{0}.name={1}", name, origName));
-
-                        break;
-
-                    case "Block":
-                        file.WriteLine(String.Format("tile.{0}.name={1}", name, origName));
-
-                        break;
-
-                    case "Item":
-
-                        break;
+                    if (tag.Value.exists)
+                    {
+                        trigged = true;
+                        file.WriteLine(String.Format("{0}.{1}.name={2}", tag.Key == "Item" ? "item" : "tile", item.NotarizedName + "_" + tag.Key.ToLower(), tag.Value.exists));
+                    }
+                }
+                if (!trigged)
+                {
+                    file.WriteLine(String.Format("{0}.{1}.name={2}", "item", item.NotarizedName, item.displayName));
                 }
             }
         }
 
-        private void textBox3_TextChanged(object sender, EventArgs e)
+        private void itemNameText_TextChanged(object sender, EventArgs e)
         {
+            currentlySelectedItem.itemName = itemNameText.Text;
+
+            currentlySelectedItem.NotarizedName = currentlySelectedItem.itemName.ToLower().Replace(" ", "_");
+            realNameText.Text = currentlySelectedItem.NotarizedName;
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        #region List Changes
+
+        private void itemListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBox4.Text = textBox2.Text;
+            if (itemListBox.SelectedIndex < 0)
+            {
+                InitializeFields(null);
+            }
+            else
+            {
+                currentlySelectedItem = items[itemListBox.SelectedIndex];
+
+                InitializeFields(currentlySelectedItem);
+            }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void refreshButton_Click(object sender, EventArgs e)
         {
+            items.AddNew();
+            items.RemoveAt(items.Count - 1);
+        }
 
+        #endregion List Changes
+
+        #region Check Boxes
+
+        private void blockCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            Console.WriteLine(currentlySelectedItem.displayName);
+
+            currentlySelectedItem.tags["Block"].exists = blockCheckBox.Checked;
+        }
+
+        private void itemCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            Console.WriteLine(currentlySelectedItem.displayName);
+
+            currentlySelectedItem.tags["Item"].exists = itemCheckBox.Checked;
+        }
+
+        private void stairsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            Console.WriteLine(currentlySelectedItem.displayName);
+
+            currentlySelectedItem.tags["Stairs"].exists = stairsCheckBox.Checked;
+        }
+
+        private void slabCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            Console.WriteLine(currentlySelectedItem.displayName);
+
+            currentlySelectedItem.tags["Slab"].exists = slabCheckBox.Checked;
+        }
+
+        private void wallCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            Console.WriteLine(currentlySelectedItem.displayName);
+
+            currentlySelectedItem.tags["Wall"].exists = wallCheckBox.Checked;
+        }
+
+        private void fenceCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            Console.WriteLine(currentlySelectedItem.displayName);
+
+            currentlySelectedItem.tags["Fence"].exists = fenceCheckBox.Checked;
+        }
+
+        private void chestCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            Console.WriteLine(currentlySelectedItem.displayName);
+            currentlySelectedItem.tags["Chest"].exists = chestCheckBox.Checked;
+        }
+
+        #endregion Check Boxes
+
+        private void displayNameText_TextChanged(object sender, EventArgs e)
+        {
+            currentlySelectedItem.displayName = displayNameText.Text;
+        }
+
+        private void textureFileChooseButton_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textureFileText.Text = currentlySelectedItem.textureFile = openFileDialog1.FileName;
+            }
+        }
+    }
+
+    public class Item
+    {
+        public string itemName;
+        public string displayName;
+
+        public string NotarizedName
+        {
+            get; set;
+        }
+
+        public string textureFile;
+
+        public Dictionary<string, ItemVariant> tags = new Dictionary<string, ItemVariant>();
+
+        public Item()
+        {
+            itemName = "Item";
+            displayName = "displayName";
+            NotarizedName = "item";
+
+            tags.Add("Block", new ItemVariant(false, displayName + " Block"));
+            tags.Add("Item", new ItemVariant(false, displayName + " Item"));
+            tags.Add("Stairs", new ItemVariant(false, displayName + " Stairs"));
+            tags.Add("Slab", new ItemVariant(false, displayName + " Slab"));
+            tags.Add("Wall", new ItemVariant(false, displayName + " Wall"));
+            tags.Add("Fence", new ItemVariant(false, displayName + " Fence"));
+            tags.Add("Chest", new ItemVariant(false, displayName + " Chest"));
+        }
+
+        public class ItemVariant
+        {
+            public bool exists;
+            public string displayName;
+
+            public ItemVariant(bool exists, string displayName)
+            {
+                this.exists = exists;
+                this.displayName = displayName;
+            }
         }
     }
 }

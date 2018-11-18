@@ -422,8 +422,21 @@ namespace Minecraft_Modding_Tool
         private void itemNameText_TextChanged(object sender, EventArgs e)
         {
             currentlySelectedItem.itemName = itemNameText.Text;
+            string[] tempDispName;
             if (!string.IsNullOrEmpty(itemNameText.Text))
-                displayNameText.Text = currentlySelectedItem.displayName = itemNameText.Text.Substring(0, 1).ToUpper() + itemNameText.Text.Substring(1);
+            {
+                tempDispName = currentlySelectedItem.itemName.ToLower().Split('_');
+                currentlySelectedItem.displayName = tempDispName[0].Substring(0, 1).ToUpper() + tempDispName[0].Substring(1);
+                for(int i = 1; i < tempDispName.Length; i++)
+                {
+                    currentlySelectedItem.displayName += ' ';
+                    if (!string.IsNullOrEmpty(itemNameText.Text) && !string.IsNullOrEmpty(tempDispName[i]))
+                        currentlySelectedItem.displayName += tempDispName[i].Substring(0, 1).ToUpper() + tempDispName[i].Substring(1);
+                    else return; 
+                }
+
+                displayNameText.Text = currentlySelectedItem.displayName;
+            }    
             else displayNameText.Text = currentlySelectedItem.displayName = null;
 
             currentlySelectedItem.NotarizedName = currentlySelectedItem.itemName.ToLower().Replace(" ", "_");

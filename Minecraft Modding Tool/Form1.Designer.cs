@@ -41,19 +41,19 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.variantLabel = new System.Windows.Forms.Label();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.chestVariantRealText = new System.Windows.Forms.TextBox();
+            this.fenceVariantRealText = new System.Windows.Forms.TextBox();
+            this.wallVariantRealText = new System.Windows.Forms.TextBox();
+            this.slabVariantRealText = new System.Windows.Forms.TextBox();
+            this.stairsVariantRealText = new System.Windows.Forms.TextBox();
+            this.itemVariantRealText = new System.Windows.Forms.TextBox();
             this.blockVariantRealText = new System.Windows.Forms.TextBox();
             this.chestVariantDisplayText = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.fenceVariantDisplayText = new System.Windows.Forms.TextBox();
+            this.wallVariantDisplayText = new System.Windows.Forms.TextBox();
+            this.slabVariantDisplayText = new System.Windows.Forms.TextBox();
+            this.stairsVariantDisplayText = new System.Windows.Forms.TextBox();
+            this.itemVariantDisplayText = new System.Windows.Forms.TextBox();
             this.blockVariantDisplayText = new System.Windows.Forms.TextBox();
             this.slabCheckBox = new System.Windows.Forms.CheckBox();
             this.wallCheckBox = new System.Windows.Forms.CheckBox();
@@ -159,24 +159,25 @@
             this.jsonGenerateButton.TabIndex = 8;
             this.jsonGenerateButton.Text = "Generate";
             this.jsonGenerateButton.UseVisualStyleBackColor = true;
+            this.jsonGenerateButton.Click += new System.EventHandler(this.GenerateJSON);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.variantLabel);
-            this.panel1.Controls.Add(this.textBox13);
-            this.panel1.Controls.Add(this.textBox12);
-            this.panel1.Controls.Add(this.textBox11);
-            this.panel1.Controls.Add(this.textBox10);
-            this.panel1.Controls.Add(this.textBox9);
-            this.panel1.Controls.Add(this.textBox8);
+            this.panel1.Controls.Add(this.chestVariantRealText);
+            this.panel1.Controls.Add(this.fenceVariantRealText);
+            this.panel1.Controls.Add(this.wallVariantRealText);
+            this.panel1.Controls.Add(this.slabVariantRealText);
+            this.panel1.Controls.Add(this.stairsVariantRealText);
+            this.panel1.Controls.Add(this.itemVariantRealText);
             this.panel1.Controls.Add(this.blockVariantRealText);
             this.panel1.Controls.Add(this.chestVariantDisplayText);
-            this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Controls.Add(this.textBox5);
-            this.panel1.Controls.Add(this.textBox4);
-            this.panel1.Controls.Add(this.textBox3);
-            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.fenceVariantDisplayText);
+            this.panel1.Controls.Add(this.wallVariantDisplayText);
+            this.panel1.Controls.Add(this.slabVariantDisplayText);
+            this.panel1.Controls.Add(this.stairsVariantDisplayText);
+            this.panel1.Controls.Add(this.itemVariantDisplayText);
             this.panel1.Controls.Add(this.blockVariantDisplayText);
             this.panel1.Controls.Add(this.slabCheckBox);
             this.panel1.Controls.Add(this.wallCheckBox);
@@ -220,54 +221,63 @@
             this.variantLabel.TabIndex = 35;
             this.variantLabel.Text = "Object Real Name";
             // 
-            // textBox13
+            // chestVariantRealText
             // 
-            this.textBox13.Location = new System.Drawing.Point(99, 289);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(236, 20);
-            this.textBox13.TabIndex = 34;
+            this.chestVariantRealText.Location = new System.Drawing.Point(99, 289);
+            this.chestVariantRealText.Name = "chestVariantRealText";
+            this.chestVariantRealText.Size = new System.Drawing.Size(236, 20);
+            this.chestVariantRealText.TabIndex = 34;
+            this.chestVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chestVariantRealText_TextChanged);
             // 
-            // textBox12
+            // fenceVariantRealText
             // 
-            this.textBox12.Location = new System.Drawing.Point(99, 266);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(236, 20);
-            this.textBox12.TabIndex = 33;
+            this.fenceVariantRealText.Location = new System.Drawing.Point(99, 266);
+            this.fenceVariantRealText.Name = "fenceVariantRealText";
+            this.fenceVariantRealText.Size = new System.Drawing.Size(236, 20);
+            this.fenceVariantRealText.TabIndex = 33;
+            this.fenceVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fenceVariantRealText_TextChanged);
             // 
-            // textBox11
+            // wallVariantRealText
             // 
-            this.textBox11.Location = new System.Drawing.Point(99, 243);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(236, 20);
-            this.textBox11.TabIndex = 32;
+            this.wallVariantRealText.Location = new System.Drawing.Point(99, 243);
+            this.wallVariantRealText.Name = "wallVariantRealText";
+            this.wallVariantRealText.Size = new System.Drawing.Size(236, 20);
+            this.wallVariantRealText.TabIndex = 32;
+            this.wallVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wallVariantRealText_TextChanged);
             // 
-            // textBox10
+            // slabVariantRealText
             // 
-            this.textBox10.Location = new System.Drawing.Point(99, 220);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(236, 20);
-            this.textBox10.TabIndex = 31;
+            this.slabVariantRealText.Location = new System.Drawing.Point(99, 220);
+            this.slabVariantRealText.Name = "slabVariantRealText";
+            this.slabVariantRealText.Size = new System.Drawing.Size(236, 20);
+            this.slabVariantRealText.TabIndex = 31;
+            this.slabVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.slabVariantRealText_TextChanged);
             // 
-            // textBox9
+            // stairsVariantRealText
             // 
-            this.textBox9.Location = new System.Drawing.Point(99, 197);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(236, 20);
-            this.textBox9.TabIndex = 30;
+            this.stairsVariantRealText.Location = new System.Drawing.Point(99, 197);
+            this.stairsVariantRealText.Name = "stairsVariantRealText";
+            this.stairsVariantRealText.Size = new System.Drawing.Size(236, 20);
+            this.stairsVariantRealText.TabIndex = 30;
+            this.stairsVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.stairsVariantRealText_TextChanged);
             // 
-            // textBox8
+            // itemVariantRealText
             // 
-            this.textBox8.Location = new System.Drawing.Point(99, 174);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(236, 20);
-            this.textBox8.TabIndex = 29;
+            this.itemVariantRealText.Location = new System.Drawing.Point(99, 174);
+            this.itemVariantRealText.Name = "itemVariantRealText";
+            this.itemVariantRealText.Size = new System.Drawing.Size(236, 20);
+            this.itemVariantRealText.TabIndex = 29;
+            this.itemVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.itemVariantRealText_TextChanged);
             // 
             // blockVariantRealText
             // 
+            this.blockVariantRealText.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
+            this.blockVariantRealText.HideSelection = false;
             this.blockVariantRealText.Location = new System.Drawing.Point(99, 151);
             this.blockVariantRealText.Name = "blockVariantRealText";
             this.blockVariantRealText.Size = new System.Drawing.Size(236, 20);
             this.blockVariantRealText.TabIndex = 28;
+            this.blockVariantRealText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.blockVariantRealText_TextChanged);
             // 
             // chestVariantDisplayText
             // 
@@ -275,41 +285,47 @@
             this.chestVariantDisplayText.Name = "chestVariantDisplayText";
             this.chestVariantDisplayText.Size = new System.Drawing.Size(236, 20);
             this.chestVariantDisplayText.TabIndex = 27;
+            this.chestVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chestVariantDisplayText_TextChanged);
             // 
-            // textBox6
+            // fenceVariantDisplayText
             // 
-            this.textBox6.Location = new System.Drawing.Point(341, 266);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(236, 20);
-            this.textBox6.TabIndex = 26;
+            this.fenceVariantDisplayText.Location = new System.Drawing.Point(341, 266);
+            this.fenceVariantDisplayText.Name = "fenceVariantDisplayText";
+            this.fenceVariantDisplayText.Size = new System.Drawing.Size(236, 20);
+            this.fenceVariantDisplayText.TabIndex = 26;
+            this.fenceVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fenceVariantDisplayText_TextChanged);
             // 
-            // textBox5
+            // wallVariantDisplayText
             // 
-            this.textBox5.Location = new System.Drawing.Point(341, 243);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(236, 20);
-            this.textBox5.TabIndex = 25;
+            this.wallVariantDisplayText.Location = new System.Drawing.Point(341, 243);
+            this.wallVariantDisplayText.Name = "wallVariantDisplayText";
+            this.wallVariantDisplayText.Size = new System.Drawing.Size(236, 20);
+            this.wallVariantDisplayText.TabIndex = 25;
+            this.wallVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wallVariantDisplayText_TextChanged);
             // 
-            // textBox4
+            // slabVariantDisplayText
             // 
-            this.textBox4.Location = new System.Drawing.Point(341, 220);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(236, 20);
-            this.textBox4.TabIndex = 24;
+            this.slabVariantDisplayText.Location = new System.Drawing.Point(341, 220);
+            this.slabVariantDisplayText.Name = "slabVariantDisplayText";
+            this.slabVariantDisplayText.Size = new System.Drawing.Size(236, 20);
+            this.slabVariantDisplayText.TabIndex = 24;
+            this.slabVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.slabVariantDisplayText_TextChanged);
             // 
-            // textBox3
+            // stairsVariantDisplayText
             // 
-            this.textBox3.Location = new System.Drawing.Point(341, 197);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(236, 20);
-            this.textBox3.TabIndex = 23;
+            this.stairsVariantDisplayText.Location = new System.Drawing.Point(341, 197);
+            this.stairsVariantDisplayText.Name = "stairsVariantDisplayText";
+            this.stairsVariantDisplayText.Size = new System.Drawing.Size(236, 20);
+            this.stairsVariantDisplayText.TabIndex = 23;
+            this.stairsVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.stairsVariantRealText_TextChanged);
             // 
-            // textBox2
+            // itemVariantDisplayText
             // 
-            this.textBox2.Location = new System.Drawing.Point(341, 174);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(236, 20);
-            this.textBox2.TabIndex = 22;
+            this.itemVariantDisplayText.Location = new System.Drawing.Point(341, 174);
+            this.itemVariantDisplayText.Name = "itemVariantDisplayText";
+            this.itemVariantDisplayText.Size = new System.Drawing.Size(236, 20);
+            this.itemVariantDisplayText.TabIndex = 22;
+            this.itemVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.itemVariantRealText_TextChanged);
             // 
             // blockVariantDisplayText
             // 
@@ -317,6 +333,7 @@
             this.blockVariantDisplayText.Name = "blockVariantDisplayText";
             this.blockVariantDisplayText.Size = new System.Drawing.Size(236, 20);
             this.blockVariantDisplayText.TabIndex = 21;
+            this.blockVariantDisplayText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.blockVariantDisplayText_TextChanged);
             // 
             // slabCheckBox
             // 
@@ -562,19 +579,19 @@
         private System.Windows.Forms.TextBox blockVariantDisplayText;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label variantLabel;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox chestVariantRealText;
+        private System.Windows.Forms.TextBox fenceVariantRealText;
+        private System.Windows.Forms.TextBox wallVariantRealText;
+        private System.Windows.Forms.TextBox slabVariantRealText;
+        private System.Windows.Forms.TextBox stairsVariantRealText;
+        private System.Windows.Forms.TextBox itemVariantRealText;
         private System.Windows.Forms.TextBox blockVariantRealText;
         private System.Windows.Forms.TextBox chestVariantDisplayText;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox fenceVariantDisplayText;
+        private System.Windows.Forms.TextBox wallVariantDisplayText;
+        private System.Windows.Forms.TextBox slabVariantDisplayText;
+        private System.Windows.Forms.TextBox stairsVariantDisplayText;
+        private System.Windows.Forms.TextBox itemVariantDisplayText;
     }
 }
 

@@ -66,6 +66,22 @@ namespace Minecraft_Modding_Tool
                 wallCheckBox.Enabled = false;
                 slabCheckBox.Enabled = false;
 
+                blockVariantDisplayText.Enabled = false;
+                chestVariantDisplayText.Enabled = false;
+                stairsVariantDisplayText.Enabled = false;
+                fenceVariantDisplayText.Enabled = false;
+                itemVariantDisplayText.Enabled = false;
+                wallVariantDisplayText.Enabled = false;
+                slabVariantDisplayText.Enabled = false;
+
+                blockVariantRealText.Enabled = false;
+                chestVariantRealText.Enabled = false;
+                stairsVariantRealText.Enabled = false;
+                fenceVariantRealText.Enabled = false;
+                itemVariantRealText.Enabled = false;
+                wallVariantRealText.Enabled = false;
+                slabVariantRealText.Enabled = false;
+
                 blockCheckBox.CheckState = CheckState.Unchecked;
                 stairsCheckBox.CheckState = CheckState.Unchecked;
                 slabCheckBox.CheckState = CheckState.Unchecked;
@@ -92,6 +108,22 @@ namespace Minecraft_Modding_Tool
             displayNameText.Text = item.displayName;
             realNameText.Text = item.NotarizedName;
 
+            blockVariantDisplayText.Text = item.tags["Block"].displayName;
+            chestVariantDisplayText.Text = item.tags["Chest"].displayName;
+            stairsVariantDisplayText.Text = item.tags["Stairs"].displayName;
+            fenceVariantDisplayText.Text = item.tags["Fence"].displayName;
+            itemVariantDisplayText.Text = item.tags["Item"].displayName;
+            wallVariantDisplayText.Text = item.tags["Wall"].displayName;
+            slabVariantDisplayText.Text = item.tags["Slab"].displayName;
+
+            blockVariantRealText.Text = item.tags["Block"].realName;
+            chestVariantRealText.Text = item.tags["Chest"].realName;
+            stairsVariantRealText.Text = item.tags["Stairs"].realName;
+            fenceVariantRealText.Text = item.tags["Fence"].realName;
+            itemVariantRealText.Text = item.tags["Item"].realName;
+            wallVariantRealText.Text = item.tags["Wall"].realName;
+            slabVariantRealText.Text = item.tags["Slab"].realName;
+
             textureFileText.Text = item.textureFile;
 
             blockCheckBox.CheckState = item.tags["Block"].exists ? CheckState.Checked : CheckState.Unchecked;
@@ -101,6 +133,23 @@ namespace Minecraft_Modding_Tool
             fenceCheckBox.CheckState = item.tags["Fence"].exists ? CheckState.Checked : CheckState.Unchecked;
             itemCheckBox.CheckState = item.tags["Item"].exists ? CheckState.Checked : CheckState.Unchecked;
             chestCheckBox.CheckState = item.tags["Chest"].exists ? CheckState.Checked : CheckState.Unchecked;
+
+            blockVariantDisplayText.Enabled = item.tags["Block"].exists;
+            chestVariantDisplayText.Enabled = item.tags["Chest"].exists;
+            stairsVariantDisplayText.Enabled = item.tags["Stairs"].exists;
+            fenceVariantDisplayText.Enabled = item.tags["Fence"].exists;
+            itemVariantDisplayText.Enabled = item.tags["Item"].exists;
+            wallVariantDisplayText.Enabled = item.tags["Wall"].exists;
+            slabVariantDisplayText.Enabled = item.tags["Slab"].exists;
+
+            blockVariantRealText.Enabled = item.tags["Block"].exists;
+            chestVariantRealText.Enabled = item.tags["Chest"].exists;
+            stairsVariantRealText.Enabled = item.tags["Stairs"].exists;
+            fenceVariantRealText.Enabled = item.tags["Fence"].exists;
+            itemVariantRealText.Enabled = item.tags["Item"].exists;
+            wallVariantRealText.Enabled = item.tags["Wall"].exists;
+            slabVariantRealText.Enabled = item.tags["Slab"].exists;
+
             swapping = false;
         }
 
@@ -138,72 +187,90 @@ namespace Minecraft_Modding_Tool
         private void GenerateItem(Item item)
         {
             UpdateLang(item);
-            if (type == "Item")
-            {
-            }
-            else if (type == "Stairs")
-            {
-                GenerateStairsModelJSON(name, modid);
-                GenerateStairsItemJSON(name, modid);
-                GenerateStairsBlockStateJSON(name, modid);
-            }
-            else if (type == "Block")
-            {
-                GenerateBlockModelJSON(name, modid);
-                GenerateBlockItemJSON(name, modid);
-                GenerateBlockBlockStateJSON(name, modid);
-            }
-            else if (type == "Slab")
-            {
-                GenerateSlabBlockStateJSON(name, modid);
-                GenerateSlabItemJSON(name, modid);
-                GenerateSlabModelJSON(name, modid);
-            }
 
-            UpdateLang(displayName, name, type);
+            if (item.tags["Block"].exists)
+            {
+                GenerateBlockModelJSON(item);
+                GenerateBlockItemJSON(item);
+                GenerateBlockBlockStateJSON(item);
+            }
+            if (item.tags["Item"].exists)
+            {
+            }
+            if (item.tags["Stairs"].exists)
+            {
+                GenerateStairsModelJSON(item);
+                GenerateStairsItemJSON(item);
+                GenerateStairsBlockStateJSON(item);
+            }
+            if (item.tags["Slab"].exists)
+            {
+                GenerateSlabBlockStateJSON(item);
+                GenerateSlabItemJSON(item);
+                GenerateSlabModelJSON(item);
+            }
+            if (item.tags["Wall"].exists)
+            {
+            }
+            if (item.tags["Chest"].exists)
+            {
+            }
+            if (item.tags["Fence"].exists)
+            {
+            }
         }
 
         #region JSON File Gen
 
-        public void GenerateStairsModelJSON(string itemName, string modid)
+        #region Stairs
+
+        public void GenerateStairsModelJSON(Item item)
         {
+            string itemName = item.tags["Stairs"].realName;
+
             string name = itemName.Replace("_stairs", "");
+            string textureName = Path.GetFileNameWithoutExtension(item.textureFile);
             string[] stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
             {
                 stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
-                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", name + "_stairs");
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\block\" + itemName + @".json", stairsModelTemplate);
             stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs Inner.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
             {
                 stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
-                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", name + "_inner_stairs");
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\block\" + name + "_inner_stairs" + @".json", stairsModelTemplate);
             stairsModelTemplate = File.ReadAllLines(templatePath + "MB Stairs Outer.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
             {
                 stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
-                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", name + "_outer_stairs");
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\block\" + name + "_outer_stairs" + @".json", stairsModelTemplate);
         }
 
-        public void GenerateStairsItemJSON(string itemName, string modid)
+        public void GenerateStairsItemJSON(Item item)
         {
+            string itemName = item.tags["Stairs"].realName;
+            string textureName = Path.GetFileNameWithoutExtension(item.textureFile);
+
             string[] stairsModelTemplate = File.ReadAllLines(templatePath + "MI Stairs.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
             {
                 stairsModelTemplate[i] = stairsModelTemplate[i].Replace("MODID", modid);
-                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", itemName);
+                stairsModelTemplate[i] = stairsModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\item\" + itemName + @".json", stairsModelTemplate);
         }
 
-        public void GenerateStairsBlockStateJSON(string itemName, string modid)
+        public void GenerateStairsBlockStateJSON(Item item)
         {
+            string itemName = item.tags["Stairs"].realName;
+
             string name = itemName.Replace("_stairs", "");
             string[] stairsModelTemplate = File.ReadAllLines(templatePath + "BS Stairs.json");
             for (int i = 0; i < stairsModelTemplate.Length; i++)
@@ -216,19 +283,26 @@ namespace Minecraft_Modding_Tool
             File.WriteAllLines(outputPath + @"\blockstates\" + name + "_stairs" + @".json", stairsModelTemplate);
         }
 
-        public void GenerateBlockModelJSON(string itemName, string modid)
+        #endregion Stairs
+
+        #region Block
+
+        public void GenerateBlockModelJSON(Item item)
         {
+            string itemName = item.tags["Block"].realName;
+
             string[] blockModelTemplate = File.ReadAllLines(templatePath + "MB Block.json");
             for (int i = 0; i < blockModelTemplate.Length; i++)
             {
                 blockModelTemplate[i] = blockModelTemplate[i].Replace("MODID", modid);
-                blockModelTemplate[i] = blockModelTemplate[i].Replace("NAME", itemName);
+                blockModelTemplate[i] = blockModelTemplate[i].Replace("NAME", Path.GetFileNameWithoutExtension(item.textureFile));
             }
             File.WriteAllLines(outputPath + @"\models\block\" + itemName + @".json", blockModelTemplate);
         }
 
-        public void GenerateBlockItemJSON(string itemName, string modid)
+        public void GenerateBlockItemJSON(Item item)
         {
+            string itemName = item.tags["Block"].realName;
             string[] blockModelTemplate = File.ReadAllLines(templatePath + "MI Block.json");
             for (int i = 0; i < blockModelTemplate.Length; i++)
             {
@@ -238,8 +312,10 @@ namespace Minecraft_Modding_Tool
             File.WriteAllLines(outputPath + @"\models\item\" + itemName + @".json", blockModelTemplate);
         }
 
-        public void GenerateBlockBlockStateJSON(string itemName, string modid)
+        public void GenerateBlockBlockStateJSON(Item item)
         {
+            string itemName = item.tags["Block"].realName;
+
             string[] blockModelTemplate = File.ReadAllLines(templatePath + "BS Block.json");
             for (int i = 0; i < blockModelTemplate.Length; i++)
             {
@@ -249,13 +325,20 @@ namespace Minecraft_Modding_Tool
             File.WriteAllLines(outputPath + @"\blockstates\" + itemName + @".json", blockModelTemplate);
         }
 
-        public void GenerateSlabModelJSON(string itemName, string modid)
+        #endregion Block
+
+        #region Slab
+
+        public void GenerateSlabModelJSON(Item item)
         {
+            string itemName = item.tags["Slab"].realName;
+            string textureName = Path.GetFileNameWithoutExtension(item.textureFile);
+
             string[] doubleSlabModelTemplate = File.ReadAllLines(templatePath + "MB Double Slab.json");
             for (int i = 0; i < doubleSlabModelTemplate.Length; i++)
             {
                 doubleSlabModelTemplate[i] = doubleSlabModelTemplate[i].Replace("MODID", modid);
-                doubleSlabModelTemplate[i] = doubleSlabModelTemplate[i].Replace("NAME", itemName);
+                doubleSlabModelTemplate[i] = doubleSlabModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\block\double_" + itemName + @".json", doubleSlabModelTemplate);
 
@@ -263,7 +346,7 @@ namespace Minecraft_Modding_Tool
             for (int i = 0; i < bottomSlabModelTemplate.Length; i++)
             {
                 bottomSlabModelTemplate[i] = bottomSlabModelTemplate[i].Replace("MODID", modid);
-                bottomSlabModelTemplate[i] = bottomSlabModelTemplate[i].Replace("NAME", itemName);
+                bottomSlabModelTemplate[i] = bottomSlabModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\block\bottom_" + itemName + @".json", bottomSlabModelTemplate);
 
@@ -271,24 +354,29 @@ namespace Minecraft_Modding_Tool
             for (int i = 0; i < upperSlabModelTemplate.Length; i++)
             {
                 upperSlabModelTemplate[i] = upperSlabModelTemplate[i].Replace("MODID", modid);
-                upperSlabModelTemplate[i] = upperSlabModelTemplate[i].Replace("NAME", itemName);
+                upperSlabModelTemplate[i] = upperSlabModelTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\block\upper_" + itemName + @".json", upperSlabModelTemplate);
         }
 
-        public void GenerateSlabItemJSON(string itemName, string modid)
+        public void GenerateSlabItemJSON(Item item)
         {
+            string itemName = item.tags["Slab"].realName;
+            string textureName = Path.GetFileNameWithoutExtension(item.textureFile);
+
             string[] slamItemTemplate = File.ReadAllLines(templatePath + "MI Slab.json");
             for (int i = 0; i < slamItemTemplate.Length; i++)
             {
                 slamItemTemplate[i] = slamItemTemplate[i].Replace("MODID", modid);
-                slamItemTemplate[i] = slamItemTemplate[i].Replace("NAME", itemName);
+                slamItemTemplate[i] = slamItemTemplate[i].Replace("NAME", textureName);
             }
             File.WriteAllLines(outputPath + @"\models\item\" + itemName + @".json", slamItemTemplate);
         }
 
-        public void GenerateSlabBlockStateJSON(string itemName, string modid)
+        public void GenerateSlabBlockStateJSON(Item item)
         {
+            string itemName = item.tags["Slab"].realName;
+
             string[] slabTemplate = File.ReadAllLines(templatePath + "BS Slab.json");
             for (int i = 0; i < slabTemplate.Length; i++)
             {
@@ -306,6 +394,8 @@ namespace Minecraft_Modding_Tool
             File.WriteAllLines(outputPath + @"\blockstates\double_" + itemName + @".json", doubleSlabTemplate);
         }
 
+        #endregion Slab
+
         #endregion JSON File Gen
 
         private void UpdateLang(Item item)
@@ -319,7 +409,7 @@ namespace Minecraft_Modding_Tool
                     if (tag.Value.exists)
                     {
                         trigged = true;
-                        file.WriteLine(String.Format("{0}.{1}.name={2}", tag.Key == "Item" ? "item" : "tile", item.NotarizedName + "_" + tag.Key.ToLower(), tag.Value.exists));
+                        file.WriteLine(String.Format("{0}.{1}.name={2}", tag.Key == "Item" ? "item" : "tile", tag.Value.realName, tag.Value.displayName));
                     }
                 }
                 if (!trigged)
@@ -369,9 +459,8 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            Console.WriteLine(currentlySelectedItem.displayName);
 
-            currentlySelectedItem.tags["Block"].exists = blockCheckBox.Checked;
+            blockVariantDisplayText.Enabled = blockVariantRealText.Enabled = currentlySelectedItem.tags["Block"].exists = blockCheckBox.Checked;
         }
 
         private void itemCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -380,9 +469,8 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            Console.WriteLine(currentlySelectedItem.displayName);
 
-            currentlySelectedItem.tags["Item"].exists = itemCheckBox.Checked;
+            itemVariantRealText.Enabled = itemVariantDisplayText.Enabled = currentlySelectedItem.tags["Item"].exists = itemCheckBox.Checked;
         }
 
         private void stairsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -391,9 +479,8 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            Console.WriteLine(currentlySelectedItem.displayName);
 
-            currentlySelectedItem.tags["Stairs"].exists = stairsCheckBox.Checked;
+            stairsVariantDisplayText.Enabled = stairsVariantRealText.Enabled = currentlySelectedItem.tags["Stairs"].exists = stairsCheckBox.Checked;
         }
 
         private void slabCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -402,9 +489,8 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            Console.WriteLine(currentlySelectedItem.displayName);
 
-            currentlySelectedItem.tags["Slab"].exists = slabCheckBox.Checked;
+            slabVariantDisplayText.Enabled = slabVariantRealText.Enabled = currentlySelectedItem.tags["Slab"].exists = slabCheckBox.Checked;
         }
 
         private void wallCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -413,9 +499,8 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            Console.WriteLine(currentlySelectedItem.displayName);
 
-            currentlySelectedItem.tags["Wall"].exists = wallCheckBox.Checked;
+            wallVariantRealText.Enabled = wallVariantDisplayText.Enabled = currentlySelectedItem.tags["Wall"].exists = wallCheckBox.Checked;
         }
 
         private void fenceCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -424,9 +509,8 @@ namespace Minecraft_Modding_Tool
             {
                 return;
             }
-            Console.WriteLine(currentlySelectedItem.displayName);
 
-            currentlySelectedItem.tags["Fence"].exists = fenceCheckBox.Checked;
+            fenceVariantRealText.Enabled = fenceVariantDisplayText.Enabled = currentlySelectedItem.tags["Fence"].exists = fenceCheckBox.Checked;
         }
 
         private void chestCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -436,8 +520,7 @@ namespace Minecraft_Modding_Tool
                 return;
             }
 
-            Console.WriteLine(currentlySelectedItem.displayName);
-            currentlySelectedItem.tags["Chest"].exists = chestCheckBox.Checked;
+            chestVariantRealText.Enabled = chestVariantDisplayText.Enabled = currentlySelectedItem.tags["Chest"].exists = chestCheckBox.Checked;
         }
 
         #endregion Check Boxes
@@ -454,6 +537,210 @@ namespace Minecraft_Modding_Tool
                 textureFileText.Text = currentlySelectedItem.textureFile = openFileDialog1.FileName;
             }
         }
+
+        #region Variant Real Text
+
+        private void blockVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Block"].realName = blockVariantRealText.Text;
+            blockVariantRealText.Text = currentlySelectedItem.tags["Block"].realName;
+        }
+
+        private void itemVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Item"].realName = itemVariantRealText.Text;
+
+            itemVariantRealText.Text = currentlySelectedItem.tags["Item"].realName;
+        }
+
+        private void stairsVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Stairs"].realName = stairsVariantRealText.Text;
+
+            stairsVariantRealText.Text = currentlySelectedItem.tags["Stairs"].realName;
+        }
+
+        private void slabVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping || e.Handled)
+            {
+                return;
+            }
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Slab"].realName = slabVariantRealText.Text;
+
+            slabVariantRealText.Text = currentlySelectedItem.tags["Slab"].realName;
+        }
+
+        private void wallVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Wall"].realName = wallVariantRealText.Text;
+
+            wallVariantRealText.Text = currentlySelectedItem.tags["Wall"].realName;
+        }
+
+        private void fenceVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Fence"].realName = fenceVariantRealText.Text;
+
+            fenceVariantRealText.Text = currentlySelectedItem.tags["Fence"].realName;
+        }
+
+        private void chestVariantRealText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+            if (e.KeyChar == ' ')
+            {
+                e.KeyChar = '_';
+            }
+
+            currentlySelectedItem.tags["Chest"].realName = chestVariantRealText.Text.Replace(" ", "_");
+
+            chestVariantRealText.Text = currentlySelectedItem.tags["Chest"].realName;
+        }
+
+        #endregion Variant Real Text
+
+        #region Variant Display Text
+
+        private void blockVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Block"].displayName = blockVariantDisplayText.Text;
+
+            blockVariantDisplayText.Text = currentlySelectedItem.tags["Block"].displayName;
+        }
+
+        private void itemVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Item"].displayName = itemVariantDisplayText.Text;
+
+            itemVariantDisplayText.Text = currentlySelectedItem.tags["Item"].displayName;
+        }
+
+        private void stairsVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Stairs"].displayName = stairsVariantDisplayText.Text;
+
+            stairsVariantDisplayText.Text = currentlySelectedItem.tags["Stairs"].displayName;
+        }
+
+        private void slabVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Slab"].displayName = slabVariantDisplayText.Text;
+
+            slabVariantDisplayText.Text = currentlySelectedItem.tags["Slab"].displayName;
+        }
+
+        private void wallVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Wall"].displayName = wallVariantDisplayText.Text;
+
+            wallVariantDisplayText.Text = currentlySelectedItem.tags["Wall"].displayName;
+        }
+
+        private void fenceVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Fence"].displayName = fenceVariantDisplayText.Text;
+
+            fenceVariantDisplayText.Text = currentlySelectedItem.tags["Fence"].displayName;
+        }
+
+        private void chestVariantDisplayText_TextChanged(object sender, KeyPressEventArgs e)
+        {
+            if (swapping)
+            {
+                return;
+            }
+
+            currentlySelectedItem.tags["Chest"].displayName = chestVariantDisplayText.Text;
+
+            chestVariantDisplayText.Text = currentlySelectedItem.tags["Chest"].displayName;
+        }
+
+        #endregion Variant Display Text
     }
 
     public class Item
@@ -489,11 +776,13 @@ namespace Minecraft_Modding_Tool
         {
             public bool exists;
             public string displayName;
+            public string realName;
 
             public ItemVariant(bool exists, string displayName)
             {
                 this.exists = exists;
                 this.displayName = displayName;
+                realName = displayName.ToLower().Replace(" ", "_");
             }
         }
     }

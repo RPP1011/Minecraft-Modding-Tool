@@ -1,0 +1,11 @@
+{
+
+    "parent": "block/fence_post",
+
+    "textures": {
+
+        "texture": "MODID:blocks/NAME"
+
+    }
+
+}

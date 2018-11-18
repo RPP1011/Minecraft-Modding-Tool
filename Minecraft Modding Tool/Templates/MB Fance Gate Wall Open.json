@@ -1,0 +1,11 @@
+{
+
+    "parent": "block/template_fence_gate_wall_open",
+
+    "textures": {
+
+        "texture": "MODID:blocks/NAME"
+
+    }
+
+}

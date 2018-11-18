@@ -1,44 +1,17 @@
 {
-    "variants": {
-        "facing=east,half=bottom,shape=straight":  { "model": "MODID:NAMEreg" },
-        "facing=west,half=bottom,shape=straight":  { "model": "MODID:NAMEreg", "y": 180, "uvlock": true },
-        "facing=south,half=bottom,shape=straight": { "model": "MODID:NAMEreg", "y": 90, "uvlock": true },
-        "facing=north,half=bottom,shape=straight": { "model": "MODID:NAMEreg", "y": 270, "uvlock": true },
-        "facing=east,half=bottom,shape=outer_right":  { "model": "MODID:NAMEout" },
-        "facing=west,half=bottom,shape=outer_right":  { "model": "MODID:NAMEout", "y": 180, "uvlock": true },
-        "facing=south,half=bottom,shape=outer_right": { "model": "MODID:NAMEout", "y": 90, "uvlock": true },
-        "facing=north,half=bottom,shape=outer_right": { "model": "MODID:NAMEout", "y": 270, "uvlock": true },
-        "facing=east,half=bottom,shape=outer_left":  { "model": "MODID:NAMEout", "y": 270, "uvlock": true },
-        "facing=west,half=bottom,shape=outer_left":  { "model": "MODID:NAMEout", "y": 90, "uvlock": true },
-        "facing=south,half=bottom,shape=outer_left": { "model": "MODID:NAMEout" },
-        "facing=north,half=bottom,shape=outer_left": { "model": "MODID:NAMEout", "y": 180, "uvlock": true },
-        "facing=east,half=bottom,shape=inner_right":  { "model": "MODID:NAMEin" },
-        "facing=west,half=bottom,shape=inner_right":  { "model": "MODID:NAMEin", "y": 180, "uvlock": true },
-        "facing=south,half=bottom,shape=inner_right": { "model": "MODID:NAMEin", "y": 90, "uvlock": true },
-        "facing=north,half=bottom,shape=inner_right": { "model": "MODID:NAMEin", "y": 270, "uvlock": true },
-        "facing=east,half=bottom,shape=inner_left":  { "model": "MODID:NAMEin", "y": 270, "uvlock": true },
-        "facing=west,half=bottom,shape=inner_left":  { "model": "MODID:NAMEin", "y": 90, "uvlock": true },
-        "facing=south,half=bottom,shape=inner_left": { "model": "MODID:NAMEin" },
-        "facing=north,half=bottom,shape=inner_left": { "model": "MODID:NAMEin", "y": 180, "uvlock": true },
-        "facing=east,half=top,shape=straight":  { "model": "MODID:NAMEreg", "x": 180, "uvlock": true },
-        "facing=west,half=top,shape=straight":  { "model": "MODID:NAMEreg", "x": 180, "y": 180, "uvlock": true },
-        "facing=south,half=top,shape=straight": { "model": "MODID:NAMEreg", "x": 180, "y": 90, "uvlock": true },
-        "facing=north,half=top,shape=straight": { "model": "MODID:NAMEreg", "x": 180, "y": 270, "uvlock": true },
-        "facing=east,half=top,shape=outer_right":  { "model": "MODID:NAMEout", "x": 180, "uvlock": true },
-        "facing=west,half=top,shape=outer_right":  { "model": "MODID:NAMEout", "x": 180, "y": 180, "uvlock": true },
-        "facing=south,half=top,shape=outer_right": { "model": "MODID:NAMEout", "x": 180, "y": 90, "uvlock": true },
-        "facing=north,half=top,shape=outer_right": { "model": "MODID:NAMEout", "x": 180, "y": 270, "uvlock": true },
-        "facing=east,half=top,shape=outer_left":  { "model": "MODID:NAMEout", "x": 180, "y": 90, "uvlock": true },
-        "facing=west,half=top,shape=outer_left":  { "model": "MODID:NAMEout", "x": 180, "y": 270, "uvlock": true },
-        "facing=south,half=top,shape=outer_left": { "model": "MODID:NAMEout", "x": 180, "y": 180, "uvlock": true },
-        "facing=north,half=top,shape=outer_left": { "model": "MODID:NAMEout", "x": 180, "uvlock": true },
-        "facing=east,half=top,shape=inner_right":  { "model": "MODID:NAMEin", "x": 180, "uvlock": true },
-        "facing=west,half=top,shape=inner_right":  { "model": "MODID:NAMEin", "x": 180, "y": 180, "uvlock": true },
-        "facing=south,half=top,shape=inner_right": { "model": "MODID:NAMEin", "x": 180, "y": 90, "uvlock": true },
-        "facing=north,half=top,shape=inner_right": { "model": "MODID:NAMEin", "x": 180, "y": 270, "uvlock": true },
-        "facing=east,half=top,shape=inner_left":  { "model": "MODID:NAMEin", "x": 180, "y": 90, "uvlock": true },
-        "facing=west,half=top,shape=inner_left":  { "model": "MODID:NAMEin", "x": 180, "y": 270, "uvlock": true },
-        "facing=south,half=top,shape=inner_left": { "model": "MODID:NAMEin", "x": 180, "y": 180, "uvlock": true },
-        "facing=north,half=top,shape=inner_left": { "model": "MODID:NAMEin", "x": 180, "uvlock": true }
-    }
+   "multipart": [
+       {   "apply": { "model": "MODID:NAME_post" }},
+       {   "when": { "north": "true" },
+           "apply": { "model": "MODID:NAME_side", "uvlock": true }
+       },
+       {   "when": { "east": "true" },
+           "apply": { "model": "MODID:NAME_side", "y": 90, "uvlock": true }
+       },
+       {   "when": { "south": "true" },
+           "apply": { "model": "MODID:NAME_side", "y": 180, "uvlock": true }
+       },
+       {   "when": { "west": "true" },
+           "apply": { "model": "MODID:NAME_side", "y": 270, "uvlock": true }
+       }
+   ]
 }

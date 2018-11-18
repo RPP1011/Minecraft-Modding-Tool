@@ -1,0 +1,11 @@
+{
+
+    "parent": "block/template_wall_side",
+
+    "textures": {
+
+        "wall": "MODID:blocks/NAME"
+
+    }
+
+}

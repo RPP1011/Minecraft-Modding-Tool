@@ -422,9 +422,19 @@ namespace Minecraft_Modding_Tool
         private void itemNameText_TextChanged(object sender, EventArgs e)
         {
             currentlySelectedItem.itemName = itemNameText.Text;
+            if (!string.IsNullOrEmpty(itemNameText.Text))
+                displayNameText.Text = currentlySelectedItem.displayName = itemNameText.Text.Substring(0, 1).ToUpper() + itemNameText.Text.Substring(1);
+            else displayNameText.Text = currentlySelectedItem.displayName = null;
 
             currentlySelectedItem.NotarizedName = currentlySelectedItem.itemName.ToLower().Replace(" ", "_");
             realNameText.Text = currentlySelectedItem.NotarizedName;
+            currentlySelectedItem.tags["Block"].realName = blockVariantRealText.Text = currentlySelectedItem.NotarizedName + "_block";
+            currentlySelectedItem.tags["Chest"].realName = chestVariantRealText.Text = currentlySelectedItem.NotarizedName + "_chest";
+            currentlySelectedItem.tags["Stairs"].realName = stairsVariantRealText.Text = currentlySelectedItem.NotarizedName + "_stairs";
+            currentlySelectedItem.tags["Fence"].realName = fenceVariantRealText.Text = currentlySelectedItem.NotarizedName + "_fence";
+            currentlySelectedItem.tags["Item"].realName = itemVariantRealText.Text = currentlySelectedItem.NotarizedName + "_item";
+            currentlySelectedItem.tags["Wall"].realName = wallVariantRealText.Text = currentlySelectedItem.NotarizedName + "_wall";
+            currentlySelectedItem.tags["Slab"].realName = slabVariantRealText.Text = currentlySelectedItem.NotarizedName + "_slab";
         }
 
         #region List Changes
@@ -528,6 +538,13 @@ namespace Minecraft_Modding_Tool
         private void displayNameText_TextChanged(object sender, EventArgs e)
         {
             currentlySelectedItem.displayName = displayNameText.Text;
+            currentlySelectedItem.tags["Block"].displayName = blockVariantDisplayText.Text = currentlySelectedItem.displayName + " Block";
+            currentlySelectedItem.tags["Chest"].displayName = chestVariantDisplayText.Text = currentlySelectedItem.displayName + " Chest";
+            currentlySelectedItem.tags["Stairs"].displayName = stairsVariantDisplayText.Text = currentlySelectedItem.displayName + " Stairs";
+            currentlySelectedItem.tags["Fence"].displayName = fenceVariantDisplayText.Text = currentlySelectedItem.displayName + " Fence";
+            currentlySelectedItem.tags["Item"].displayName = itemVariantDisplayText.Text = currentlySelectedItem.displayName + " Item";
+            currentlySelectedItem.tags["Wall"].displayName = wallVariantDisplayText.Text = currentlySelectedItem.displayName + " Wall";
+            currentlySelectedItem.tags["Slab"].displayName = slabVariantDisplayText.Text = currentlySelectedItem.displayName + " Slab";
         }
 
         private void textureFileChooseButton_Click(object sender, EventArgs e)

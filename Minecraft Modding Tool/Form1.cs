@@ -421,6 +421,7 @@ namespace Minecraft_Modding_Tool
 
         private void itemNameText_TextChanged(object sender, EventArgs e)
         {
+            if (swapping) return;
             currentlySelectedItem.itemName = itemNameText.Text;
             string[] tempDispName;
             if (!string.IsNullOrEmpty(itemNameText.Text))
@@ -550,6 +551,8 @@ namespace Minecraft_Modding_Tool
 
         private void displayNameText_TextChanged(object sender, EventArgs e)
         {
+            if (swapping)
+                return;
             currentlySelectedItem.displayName = displayNameText.Text;
             currentlySelectedItem.tags["Block"].displayName = blockVariantDisplayText.Text = currentlySelectedItem.displayName + " Block";
             currentlySelectedItem.tags["Chest"].displayName = chestVariantDisplayText.Text = currentlySelectedItem.displayName + " Chest";
